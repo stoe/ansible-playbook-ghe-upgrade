@@ -1,0 +1,15 @@
+---
+- block:
+  # https://git.io/fN3Fm
+  - name: 'Unset the maintenance mode'
+    command: ghe-maintenance -u
+    register: ghe_maintenance_unset
+    when: ghe_maintenance_mode_enabled
+    failed_when: ghe_maintenance_unset.rc != 0
+
+  - debug:
+      msg: '{{ ghe_maintenance_unset }}'
+      verbosity: 2
+
+  delegate_to: github_primary
+  when: ghe.primary_ip != False

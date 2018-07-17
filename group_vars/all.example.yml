@@ -1,0 +1,8 @@
+---
+ghe:
+  primary_ip: 0.0.0.0
+  replica_ip: False
+  backup: False
+
+# e.g. keypair_file: '~.ssh/id_rsa'
+keypair_file: '/path/to/keypair/file'

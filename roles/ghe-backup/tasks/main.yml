@@ -1,0 +1,26 @@
+---
+- block:
+  - name: 'Ensure GHE Backup Utilities data directory exists'
+    file:
+      path: "{{ backup_utils_data_dir }}"
+      state: directory
+    become: no
+  - name: 'Check if GHE Backup Utilities is currently running'
+    file:
+      path: "{{ backup_utils_data_dir }}/in-progress"
+      state: file
+    become: no
+    register: backup_in_progress
+    failed_when: backup_in_progress.state == 'file'
+  # https://git.io/fNsJG
+  - name: 'Create a snapshots of all GHE data'
+    command: "{{ backup_utils_dir }}/bin/ghe-backup"
+    register: backup_run
+    when: backup_in_progress.state != 'file'
+    failed_when: backup_run.rc != 0
+
+  - debug:
+      msg: '{{ backup_run }}'
+      verbosity: 2
+
+  when: ghe.backup

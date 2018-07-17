@@ -1,0 +1,62 @@
+---
+- block:
+  # https://docs.ansible.com/ansible/latest/modules/wait_for_module.html
+  - name: 'Wait for the GHE admin port to come up (port: 8443, primary)'
+    wait_for:
+      host: '{{ ghe.primary_ip }}'
+      port: 8443
+      delay: 5
+      state: started
+    register: ghe_primary_ssh
+    failed_when: ghe_primary_ssh.state != 'started'
+
+  - debug:
+      msg: '{{ ghe_primary_ssh }}'
+      verbosity: 2
+
+  # https://docs.ansible.com/ansible/latest/modules/add_host_module.html
+  - name: 'Add GHE to inventory (primary)'
+    add_host:
+      name: github_primary
+      groups:
+        - github
+      ansible_host: "{{ ghe.primary_ip }}"
+      ansible_connection: ssh
+      ansible_port: 122
+      ansible_user: admin
+      ansible_ssh_common_args: -o StrictHostKeyChecking=no
+      ansible_ssh_private_key_file: "{{ keypair_file }}"
+    when: ghe_primary_ssh.state == 'started'
+
+  when: ghe.primary_ip != False
+
+- block:
+  # https://docs.ansible.com/ansible/latest/modules/wait_for_module.html
+  - name: 'Wait for the GHE admin port to come up (port: 8443, replica)'
+    wait_for:
+      host: '{{ ghe.replica_ip }}'
+      port: 8443
+      delay: 5
+      state: started
+    register: ghe_replica_ssh
+    failed_when: ghe_replica_ssh.state != 'started'
+
+  - debug:
+      msg: '{{ ghe_replica_ssh }}'
+      verbosity: 2
+
+  # https://docs.ansible.com/ansible/latest/modules/add_host_module.html
+  - name: 'Add GHE to inventory (replica)'
+    add_host:
+      name: github_replica
+      groups:
+        - github
+      ansible_host: "{{ ghe.replica_ip }}"
+      ansible_connection: ssh
+      ansible_port: 122
+      ansible_user: admin
+      ansible_ssh_common_args: -o StrictHostKeyChecking=no
+      ansible_ssh_private_key_file: "{{ keypair_file }}"
+    when: ghe_replica_ssh.state == 'started'
+
+  when: ghe.replica_ip != False

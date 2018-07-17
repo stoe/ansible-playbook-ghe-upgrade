@@ -1,0 +1,11 @@
+---
+- hosts: localhost
+  gather_facts: False
+  remote_user: admin
+
+  roles:
+    - role: ghe-hosts
+    - role: ghe-maintenance-set
+    - role: ghe-backup
+    - role: ghe-repl
+    - role: ghe-maintenance-unset

@@ -1,0 +1,55 @@
+data/
+group_vars/all.yml
+roles/**/defaults/
+
+# Compiled source #
+###################
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+*.pyc
+
+# Packages #
+############
+# it's better to unpack these files and commit the raw source
+# git has its own built in compression methods
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+*.tgz
+
+# Logs and databases #
+######################
+*.log
+*.sql
+*.sqlite
+*.db
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# Security tokens and certificates #
+####################################
+*.pem
+*.cer
+*.crt
+*.csr
+*.key
+*.pub
+
+# Ansible created files #
+#########################
+*.retry

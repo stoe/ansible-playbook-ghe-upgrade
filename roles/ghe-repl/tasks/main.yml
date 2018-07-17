@@ -1,0 +1,14 @@
+---
+- block:
+  # https://git.io/fN3FU
+  - name: 'Get GHE replica status'
+    command: ghe-repl-status
+    register: ghe_repl_status
+    failed_when: ghe_repl_status.rc != 0
+
+  - debug:
+      msg: '{{ ghe_repl_status }}'
+      verbosity: 2
+
+  delegate_to: github_replica
+  when: ghe.replica_ip != False
